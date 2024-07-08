@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset = "UTF-8">
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
+    <title>Canvas</title>
+    <style>
+        table {
+            float: left;
+        }
+        #figure {
+            clear: both;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <tr><th>Day</th><th>Sold</th></tr>
+    <tr><td>Monday   </td><td><input type = "text" id = "day0" value = "10" /></td></tr>
+    <tr><td>Tuesday  </td><td><input type = "text" id = "day1" value = "15" /></td></tr>
+    <tr><td>Wednesday</td><td><input type = "text" id = "day2" value = "20" /></td></tr>
+    <tr><td>Thursday </td><td><input type = "text" id = "day3" value = "15" /></td></tr>
+    <tr><td>Friday   </td><td><input type = "text" id = "day4" value = "12" /></td></tr>
+</table>
+<canvas id = "figure" height = "150" width = "200">
+    This browser does not support canvas
+</canvas>
+<br />
+<button onclick = "gisto()">Gisto</button>
+<button onclick = "graph()">Graph</button>
+<script>
+    function gisto() {
+    }
+    function graph() {
+    }
+
+    function gisto() {
+        const gradientColors = [['#4286f4', '#373b44'],
+            ['#00d2ff', '#3a7bd5'],
+            ['#a8c0ff', '#3f2b96'],
+            ['#8f94fb', '#4e54c8'],
+            ['#34c5ac', '#101654']
+        ];
+        var fig = figure.getContext('2d');
+        fig.fillStyle = "#fff";        // Clear Canvas -
+        fig.fillRect(0, 0, 200, 150);  // fill its area by white color
+        fig.shadowBlur = 5;
+        fig.shadowOffsetX = 5;
+        fig.shadowOffsetY = 5;
+        fig.font = 'bold 14px Arial';
+        for (let i = 0; i < 5; ++i) {
+            let sold = document.getElementById("day" + i).value;
+            let barGradient = fig.createLinearGradient(0, 0, 0, 150);
+            barGradient.addColorStop(0.0, gradientColors[i][0]);
+            barGradient.addColorStop(1.0, gradientColors[i][1]);
+            fig.fillStyle = barGradient;
+            fig.shadowColor = '#ccc';
+            fig.fillRect(40 * i, 130 - sold * 5, 30, 150);
+            fig.shadowColor = '#fff';
+            fig.fillText(sold, 40 * i + 8, 115 - sold * 5)
+        }
+    }
+
+    function graph() {
+        var fig = figure.getContext('2d');
+        fig.fillStyle = "#fff";
+        fig.fillRect(0, 0, 200, 150);
+        const bg = document.createElement('img');
+        bg.src = "grid.png";
+        bg.addEventListener('load', e => {
+            fig.drawImage(bg, 0, 0, 200, 150);
+            fig.fillStyle = "tomato";
+            fig.font = '10px Calibri';
+            for (let i = 0; i < 5; ++i) {
+                let sold = document.getElementById("day" + i).value;
+                if (i != 0) {
+                    fig.strokeStyle = "tomato";
+                    fig.lineTo(40 * i + 10, 130 - sold * 5);
+                    fig.stroke();
+                }
+                fig.beginPath();
+                fig.arc(40 * i + 10, 130 - sold * 5, 5, 0, 2 * Math.PI);
+                fig.fill();
+                fig.strokeStyle = "black";
+                fig.strokeText(sold, 40 * i + 8, 150 - sold * 5);
+                fig.moveTo(40 * i + 10, 130 - sold * 5);
+            }
+        });
+    }
+</script>
+</body>
+</html>
